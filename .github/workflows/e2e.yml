@@ -24,14 +24,14 @@ jobs:
         curl -L -o glauth https://github.com/glauth/glauth/releases/download/v2.2.0-RC1/glauth-linux-amd64
         chmod +x glauth
 
+    - name: build
+      run: make build
+
     - name: run glauth
       run: |
         curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
         ./glauth -c sample.cfg &
         sleep 5
-
-    - name: build
-      run: make build
 
     - name: test-bind-mode
       run: make test-bind-mode
@@ -53,14 +53,14 @@ jobs:
           curl -L -o glauth https://github.com/glauth/glauth/releases/download/v2.2.0-RC1/glauth-linux-amd64
           chmod +x glauth
 
+      - name: build
+        run: make build
+
       - name: run glauth
         run: |
           curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
           ./glauth -c sample.cfg &
           sleep 5
-
-      - name: build
-        run: make build
 
       - name: test-search-mode
         run: make test-search-mode
