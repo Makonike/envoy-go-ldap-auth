@@ -18,7 +18,6 @@
 package main
 
 import (
-	"fmt"
 	xds "github.com/cncf/xds/go/xds/type/v3"
 	"github.com/envoyproxy/envoy/contrib/golang/filters/http/source/go/pkg/api"
 	"github.com/envoyproxy/envoy/contrib/golang/filters/http/source/go/pkg/http"
@@ -93,7 +92,6 @@ func configFactory(c interface{}) api.StreamFilterFactory {
 	if !ok {
 		panic("unexpected config type, should not happen")
 	}
-	fmt.Println("conf>>>", conf)
 	return func(callbacks api.FilterCallbackHandler) api.StreamFilter {
 		return &filter{
 			callbacks: callbacks,
