@@ -47,6 +47,7 @@ type parser struct {
 func (p *parser) Parse(any *anypb.Any) (interface{}, error) {
 	configStruct := &xds.TypedStruct{}
 	if err := any.UnmarshalTo(configStruct); err != nil {
+		fmt.Println("error unmarshalling config", err)
 		return nil, err
 	}
 
@@ -93,14 +94,10 @@ func configFactory(c interface{}) api.StreamFilterFactory {
 	if !ok {
 		panic("unexpected config type, should not happen")
 	}
-	fmt.Println("conf>>>", conf)
 	return func(callbacks api.FilterCallbackHandler) api.StreamFilter {
 		return &filter{
 			callbacks: callbacks,
 			config:    conf,
 		}
 	}
-}
-
-func main() {
 }
