@@ -1,4 +1,4 @@
-.PHONY: build run test
+.PHONY: build test-bind-mode test-search-mode clean
 
 build:
 	docker run --rm -v $(PWD):/go/src/go-filter -w /go/src/go-filter \
@@ -7,6 +7,7 @@ build:
 		go build -v -o libgolang.so -buildmode=c-shared -buildvcs=false .
 
 test-bind-mode:
+	docker rm -f envoy-ldap-test
 	docker run --rm -v $(PWD)/example/envoy.yaml:/etc/envoy/envoy.yaml \
 		-v $(PWD)/libgolang.so:/etc/envoy/libgolang.so \
 		-e GODEBUG=cgocheck=0 \
@@ -20,6 +21,7 @@ test-bind-mode:
 	docker rm -f envoy-ldap-test
 
 test-search-mode:
+	docker rm -f envoy-ldap-test
 	docker run --rm -v $(PWD)/example/envoy-search.yaml:/etc/envoy/envoy.yaml \
 		-v $(PWD)/libgolang.so:/etc/envoy/libgolang.so \
 		-e GODEBUG=cgocheck=0 \

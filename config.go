@@ -28,6 +28,7 @@ import (
 func init() {
 	http.RegisterHttpFilterConfigParser(&parser{})
 	http.RegisterHttpFilterConfigFactory("envoy-go-ldap-auth", configFactory)
+	fmt.Println("init>>>")
 }
 
 type config struct {
