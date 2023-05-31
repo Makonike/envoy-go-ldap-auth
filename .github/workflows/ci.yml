@@ -28,12 +28,17 @@ jobs:
       run: |
         curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
         ./glauth -c sample.cfg &
+        sleep 5
 
     - name: build
       run: make build
 
     - name: test-run
-      run: make test-run
+      run: |
+        make test-run
+        sleep 5
 
     - name: test
-      run: make test
+      run: |
+        make test
+        sleep 5

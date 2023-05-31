@@ -1,4 +1,4 @@
-.PHONY: build build-local run test
+.PHONY: build build-local run test-run test
 build:
 	docker run --rm -v `pwd`:/go/src/go-filter -w /go/src/go-filter \
 		-e GOPROXY=https://goproxy.cn \
