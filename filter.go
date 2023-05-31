@@ -75,29 +75,31 @@ func newLdapClient(config *config) (*ldap.Conn, error) {
 }
 
 // authLdap authenticates the user against the ldap server.
-func (f *filter) authLdap(username, password string) bool {
-	if f.config.filter != "" {
-		return f.searchMode(username, password)
+func authLdap(config *config, username, password string) bool {
+	if config.filter != "" {
+		return searchMode(config, username, password)
 	}
 
 	// run with bind mode
-	client, err := dial(f.config)
+	client, err := dial(config)
 	if err != nil {
-		f.callbacks.Log(api.Debug, fmt.Sprintf("dial error: %v", err))
+		fmt.Println("dial error: ", err)
+		//f.callbacks.Log(api.Debug, fmt.Sprintf("dial error: %v", err))
 		return false
 	}
 
 	_, err = client.SimpleBind(&ldap.SimpleBindRequest{
-		Username: fmt.Sprintf(f.config.attribute+"=%s,%s", username, f.config.baseDN),
+		Username: fmt.Sprintf(config.attribute+"=%s,%s", username, config.baseDN),
 		Password: password,
 	})
 	return err == nil
 }
 
-func (f *filter) searchMode(username, password string) (auth bool) {
-	client, err := newLdapClient(f.config)
+func searchMode(config *config, username, password string) (auth bool) {
+	client, err := newLdapClient(config)
 	if err != nil {
-		f.callbacks.Log(api.Debug, fmt.Sprintf("newLdapClient error: %v", err))
+		fmt.Println("newLdapClient error: ", err)
+		//f.callbacks.Log(api.Debug, fmt.Sprintf("newLdapClient error: %v", err))
 		return
 	}
 	defer func() {
@@ -111,26 +113,27 @@ func (f *filter) searchMode(username, password string) (auth bool) {
 		}
 	}()
 
-	req := ldap.NewSearchRequest(f.config.baseDN,
+	req := ldap.NewSearchRequest(config.baseDN,
 		ldap.ScopeWholeSubtree, ldap.NeverDerefAliases, 0, 0, false,
-		fmt.Sprintf(f.config.filter, username),
-		[]string{f.config.attribute}, nil)
+		fmt.Sprintf(config.filter, username),
+		[]string{config.attribute}, nil)
 
 	sr, err := client.Search(req)
 	if err != nil {
-		f.callbacks.Log(api.Debug, fmt.Sprintf("search error: %v", err))
+		//f.callbacks.Log(api.Debug, fmt.Sprintf("search error: %v", err))
+		fmt.Println("search error: ", err)
 		return
 	}
 
 	if len(sr.Entries) != 1 {
-		f.callbacks.Log(api.Debug, fmt.Sprintf("search not found: %v", err))
+		//f.callbacks.Log(api.Debug, fmt.Sprintf("search not found: %v", err))
 		return
 	}
 
 	userDn := sr.Entries[0].DN
 	err = client.Bind(userDn, password)
 	if err != nil {
-		f.callbacks.Log(api.Debug, fmt.Sprintf("bind error: %v", err))
+		//f.callbacks.Log(api.Debug, fmt.Sprintf("bind error: %v", err))
 		return
 	}
 
@@ -148,7 +151,7 @@ func (f *filter) verify(header api.RequestHeaderMap) (bool, string) {
 	if !ok {
 		return false, "invalid Authorization format"
 	}
-	ok = f.authLdap(username, password)
+	ok = authLdap(f.config, username, password)
 	if !ok {
 		return false, "invalid username or password"
 	}

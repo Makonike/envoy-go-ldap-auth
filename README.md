@@ -59,18 +59,15 @@ make run
 
 This test case is based on glauth and can be utilized to evaluate your filter.
 
-Firstly, download [glauth](https://github.com/glauth/glauth/releases), and change its [sample config file](https://github.com/glauth/glauth/blob/master/v2/sample-simple.cfg).
+Firstly, download [glauth](https://github.com/glauth/glauth/releases), and its [sample config file](https://github.com/glauth/glauth/blob/master/v2/sample-simple.cfg).
 
-sample.yaml
+Then, start glauth.
 
-```yaml
-[ldap]
-  enabled = true
-  # run on a non privileged port
-  listen = "192.168.64.1:3893" # 192.168.64.1 is your local network IP. Please synchronize it with envoy.yaml.
+```bash
+./glauth -c sample.yaml
 ```
 
-envoy.yaml, and you can find this example file in `example` directory
+Modify your envoy.yaml, and you can find this example file in `example` directory
 
 ```yaml
 http_filters:
@@ -84,7 +81,7 @@ http_filters:
         "@type": type.googleapis.com/xds.type.v3.TypedStruct
         value:
           # required
-          host: 192.168.64.1
+          host: localhost
           port: 3893
           base_dn: dc=glauth,dc=com
           attribute: cn
@@ -95,12 +92,6 @@ http_filters:
           # if the filter is set, the filter application will run in search mode.
           filter: (cn=%s)
           timeout: 60 # unit is second.
-```
-
-Then, start glauth.
-
-```bash
-./glauth -c sample.yaml
 ```
 
 Start and test filter.
