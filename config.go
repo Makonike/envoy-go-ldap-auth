@@ -28,7 +28,6 @@ import (
 func init() {
 	http.RegisterHttpFilterConfigParser(&parser{})
 	http.RegisterHttpFilterConfigFactory("envoy-go-ldap-auth", configFactory)
-	fmt.Println("init>>>")
 }
 
 type config struct {
@@ -95,6 +94,7 @@ func configFactory(c interface{}) api.StreamFilterFactory {
 	if !ok {
 		panic("unexpected config type, should not happen")
 	}
+	fmt.Println("conf>>>", conf)
 	return func(callbacks api.FilterCallbackHandler) api.StreamFilter {
 		return &filter{
 			callbacks: callbacks,
