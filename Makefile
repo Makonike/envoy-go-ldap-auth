@@ -9,7 +9,7 @@ build:
 test-bind-mode:
 	docker run --rm -v $(PWD)/example/envoy.yaml:/etc/envoy/envoy.yaml \
 		-v $(PWD)/libgolang.so:/etc/envoy/libgolang.so \
-		-e -e GODEBUG=cgocheck=0 \
+		-e GODEBUG=cgocheck=0 \
 		-p 10000:10000 \
 		envoyproxy/envoy:contrib-dev \
 		envoy -c /etc/envoy/envoy.yaml &

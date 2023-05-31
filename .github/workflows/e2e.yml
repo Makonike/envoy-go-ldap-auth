@@ -34,10 +34,7 @@ jobs:
       run: make build
 
     - name: test-bind-mode
-#      run: make test-bind-mode
-      run: | 
-        curl -s -I 'http://localhost:10000/' \
-        -H 'Authorization: Basic aGFja2Vyczpkb2dvb2Q='
+      run: make test-bind-mode
 
   test-search:
     runs-on: ubuntu-latest
