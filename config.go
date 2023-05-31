@@ -45,6 +45,7 @@ type parser struct {
 }
 
 func (p *parser) Parse(any *anypb.Any) (interface{}, error) {
+	fmt.Println("any>>", any)
 	configStruct := &xds.TypedStruct{}
 	if err := any.UnmarshalTo(configStruct); err != nil {
 		fmt.Println("error unmarshalling config", err)
