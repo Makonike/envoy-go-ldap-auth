@@ -41,11 +41,11 @@ http_filters:
           attribute: cn
           # optional
           # be used in search mode
-          bind_dn: 
-          bind_password: 
+          bind_dn: # cn=admin,dc=example,dc=com
+          bind_password: # mypassword
           # if the filter is set, the filter application will run in search mode.
-          filter: 
-          timeout: 60
+          filter: # (&(objectClass=inetOrgPerson)(gidNumber=500)(uid=%s))
+          timeout: 60 # unit is second.
 ```
 
 Then, you can start your filter.
@@ -94,7 +94,7 @@ http_filters:
           bind_password: mysecret
           # if the filter is set, the filter application will run in search mode.
           filter: (cn=%s)
-          timeout: 60
+          timeout: 60 # unit is second.
 ```
 
 Then, start glauth.
@@ -204,7 +204,6 @@ The domain name to bind to in order to authenticate to the LDAP server when runn
 - bind_password, string, default ""
 
 The password corresponding to the `bindDN` specified when running in search mode, used in order to authenticate to the LDAP server.
-
 
 - timeout, number, default 60
 
