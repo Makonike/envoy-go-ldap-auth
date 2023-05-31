@@ -31,3 +31,6 @@ test-search-mode:
 	go test test/e2e_search_test.go
 
 	docker rm -f envoy-ldap-test
+
+clean:
+	docker rm -f envoy-ldap-test

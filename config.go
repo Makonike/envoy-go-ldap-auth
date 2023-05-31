@@ -18,6 +18,7 @@
 package main
 
 import (
+	"fmt"
 	xds "github.com/cncf/xds/go/xds/type/v3"
 	"github.com/envoyproxy/envoy/contrib/golang/filters/http/source/go/pkg/api"
 	"github.com/envoyproxy/envoy/contrib/golang/filters/http/source/go/pkg/http"
@@ -25,8 +26,8 @@ import (
 )
 
 func init() {
-	http.RegisterHttpFilterConfigFactory("envoy-go-ldap-auth", configFactory)
 	http.RegisterHttpFilterConfigParser(&parser{})
+	http.RegisterHttpFilterConfigFactory("envoy-go-ldap-auth", configFactory)
 }
 
 type config struct {
@@ -92,6 +93,7 @@ func configFactory(c interface{}) api.StreamFilterFactory {
 	if !ok {
 		panic("unexpected config type, should not happen")
 	}
+	fmt.Println("conf>>>", conf)
 	return func(callbacks api.FilterCallbackHandler) api.StreamFilter {
 		return &filter{
 			callbacks: callbacks,
