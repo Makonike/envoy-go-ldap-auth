@@ -2,9 +2,9 @@ name: build ci
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "test-ci" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "test-ci" ]
 
 jobs:
   build:
@@ -19,5 +19,21 @@ jobs:
       with:
         go-version: 1.19
 
+    - name: prepare glauth
+      run:
+      - curl -L -o glauth https://github.com/glauth/glauth/releases/download/v2.2.0-RC1/glauth-linux-amd64
+      - chmod +x glauth
+
+    - name: run glauth
+      run:
+      - curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
+      - ./glauth -c sample.cfg &
+
     - name: build
       run: make build
+
+    - name: test-run
+      run: make test-run
+
+    - name: test
+      run: make test

@@ -20,7 +20,7 @@ test-run:
 		-v `pwd`/libgolang.so:/etc/envoy/libgolang.so \
 		-p 10000:10000 \
 		envoyproxy/envoy:contrib-dev \
-		envoy -c /etc/envoy/envoy.yaml
+		envoy -c /etc/envoy/envoy.yaml &
 
 test:
 	curl -s -I 'http://localhost:10000/'
