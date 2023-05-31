@@ -18,7 +18,6 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	xds "github.com/cncf/xds/go/xds/type/v3"
 	"github.com/envoyproxy/envoy/contrib/golang/filters/http/source/go/pkg/api"
@@ -46,23 +45,8 @@ type parser struct {
 }
 
 func (p *parser) Parse(any *anypb.Any) (interface{}, error) {
-	fmt.Println("any>>", any)
 	configStruct := &xds.TypedStruct{}
-
-	if any == nil {
-		return nil, errors.New("wrong config type, nil")
-	}
-	fmt.Println("str>>", string(any.GetValue()))
-	if !any.MessageIs(configStruct) {
-		got := configStruct.ProtoReflect().Descriptor().FullName()
-		fmt.Println("got>>", got)
-		want := any.MessageName()
-		fmt.Println("want>>", want)
-		fmt.Printf("mismatched message type: got %q, want %q", got, want)
-	}
-
 	if err := any.UnmarshalTo(configStruct); err != nil {
-		fmt.Println("error unmarshalling config", err)
 		return nil, err
 	}
 

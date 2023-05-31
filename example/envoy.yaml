@@ -24,7 +24,7 @@ static_resources:
                       library_path: /etc/envoy/libgolang.so
                       plugin_name: envoy-go-ldap-auth
                       plugin_config:
-                        "@type": type.googleapis.com/xds.type.v3.TypedStruct
+                        "@type": "type.googleapis.com/xds.type.v3.TypedStruct"
                         value:
                           # required
                           host: localhost
