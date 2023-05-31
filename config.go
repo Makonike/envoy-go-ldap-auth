@@ -101,3 +101,6 @@ func configFactory(c interface{}) api.StreamFilterFactory {
 		}
 	}
 }
+
+func main() {
+}
