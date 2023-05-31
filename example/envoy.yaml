@@ -27,7 +27,7 @@ static_resources:
                         "@type": type.googleapis.com/xds.type.v3.TypedStruct
                         value:
                           # required
-                          host: 192.168.66.163
+                          host: localhost
                           port: 3893
                           base_dn: dc=glauth,dc=com
                           attribute: cn
