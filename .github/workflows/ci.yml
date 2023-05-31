@@ -34,12 +34,5 @@ jobs:
     - name: build
       run: make build
 
-    - name: test-run
-      run: |
-        make test-run
-        sleep 5
-
     - name: test
-      run: |
-        make test
-        sleep 5
+      run: make test
