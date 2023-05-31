@@ -13,7 +13,7 @@ test-bind-mode:
 		envoyproxy/envoy:contrib-dev \
 		envoy -c /etc/envoy/envoy.yaml &
 	sleep 5
-	go test test/e2e_bind_test.go
+	go test -v -tags cgo test/e2e_bind_test.go
 
 test-search-mode:
 	docker run --rm -v $(PWD)/example/envoy-search.yaml:/etc/envoy/envoy.yaml \
@@ -22,4 +22,4 @@ test-search-mode:
 		envoyproxy/envoy:contrib-dev \
 		envoy -c /etc/envoy/envoy.yaml &
 	sleep 5
-	go test test/e2e_search_test.go
+	go test -v -tags cgo test/e2e_search_test.go
