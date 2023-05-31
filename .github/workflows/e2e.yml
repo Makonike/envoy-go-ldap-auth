@@ -33,8 +33,8 @@ jobs:
     - name: build
       run: make build
 
-    - name: test-bind_mode
-      run: make test-bind_mode
+    - name: test-bind-mode
+      run: make test-bind-mode
 
   test-search:
     runs-on: ubuntu-latest
