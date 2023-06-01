@@ -30,7 +30,8 @@ jobs:
     - name: run glauth
       run: |
         curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
-        sed -i '' "s#listen = \"0.0.0.0:3893\"#listen = \"$(ipconfig getifaddr en0):3893\"#" sample.cfg
+        ifconfig
+        sed -i "s#listen = \"0.0.0.0:3893\"#listen = \"$(ifconfig en0 | grep 'inet ' | awk '{print $2}'):3893\"#" sample.cfg
         ./glauth -c sample.cfg &
         sleep 5
 
@@ -62,7 +63,8 @@ jobs:
       - name: run glauth
         run: |
           curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
-          sed -i '' "s#listen = \"0.0.0.0:3893\"#listen = \"$(ipconfig getifaddr en0):3893\"#" sample.cfg
+          ifconfig
+          sed -i "s#listen = \"0.0.0.0:3893\"#listen = \"$(ifconfig en0 | grep 'inet ' | awk '{print $2}'):3893\"#" sample.cfg
           ./glauth -c sample.cfg &
           sleep 5
 
