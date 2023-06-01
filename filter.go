@@ -69,6 +69,7 @@ func newLdapClient(config *config) (*ldap.Conn, error) {
 	err = client.Bind(config.bindDN, config.password)
 	// First bind with a read only user
 	if err != nil {
+		fmt.Println("new ldap client bind error: ", err)
 		return nil, err
 	}
 	return client, err
