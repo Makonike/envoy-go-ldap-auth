@@ -69,10 +69,9 @@ func newLdapClient(config *config) (*ldap.Conn, error) {
 	err = client.Bind(config.bindDN, config.password)
 	// First bind with a read only user
 	if err != nil {
-		fmt.Println("new ldap client bind error: ", err)
 		return nil, err
 	}
-	return client, err
+	return client, nil
 }
 
 // authLdap authenticates the user against the ldap server.
@@ -84,7 +83,7 @@ func (f *filter) authLdap(username, password string) bool {
 	// run with bind mode
 	client, err := dial(f.config)
 	if err != nil {
-		f.callbacks.Log(api.Info, fmt.Sprintf("dial error: %v", err))
+		f.callbacks.Log(api.Error, fmt.Sprintf("dial error: %v", err))
 		return false
 	}
 
@@ -98,7 +97,7 @@ func (f *filter) authLdap(username, password string) bool {
 func (f *filter) searchMode(username, password string) (auth bool) {
 	client, err := newLdapClient(f.config)
 	if err != nil {
-		f.callbacks.Log(api.Info, fmt.Sprintf("newLdapClient error: %v", err))
+		f.callbacks.Log(api.Error, fmt.Sprintf("newLdapClient error: %v", err))
 		return
 	}
 	defer func() {
@@ -119,19 +118,19 @@ func (f *filter) searchMode(username, password string) (auth bool) {
 
 	sr, err := client.Search(req)
 	if err != nil {
-		f.callbacks.Log(api.Info, fmt.Sprintf("search error: %v", err))
+		f.callbacks.Log(api.Debug, fmt.Sprintf("search error: %v", err))
 		return
 	}
 
 	if len(sr.Entries) != 1 {
-		f.callbacks.Log(api.Info, fmt.Sprintf("search not found: %v", err))
+		f.callbacks.Log(api.Debug, fmt.Sprintf("search not found: %v", err))
 		return
 	}
 
 	userDn := sr.Entries[0].DN
 	err = client.Bind(userDn, password)
 	if err != nil {
-		f.callbacks.Log(api.Info, fmt.Sprintf("bind error: %v", err))
+		f.callbacks.Log(api.Debug, fmt.Sprintf("bind error: %v", err))
 		return
 	}
 

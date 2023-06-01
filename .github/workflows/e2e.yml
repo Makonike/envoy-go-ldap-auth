@@ -68,5 +68,5 @@ jobs:
 
       - name: test-search-mode
         run: |
-          sed -i "s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/" example/envoy.yaml
+          sed -i "s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/" example/envoy-search.yaml
           make test-search-mode
