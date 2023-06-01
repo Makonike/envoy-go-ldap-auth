@@ -30,11 +30,14 @@ jobs:
     - name: run glauth
       run: |
         curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
+        sed -i '' "s#listen = \"0.0.0.0:3893\"#listen = \"$(ipconfig getifaddr en0):3893\"#" sample.cfg
         ./glauth -c sample.cfg &
         sleep 5
 
     - name: test-bind-mode
-      run: make test-bind-mode
+      run: |
+        sed -i '' "s/host: localhost/host: $(ipconfig getifaddr en0 | awk '{print $NF}')/" example/envoy.yaml
+        make test-bind-mode
 
   test-search:
     runs-on: ubuntu-latest
@@ -59,8 +62,11 @@ jobs:
       - name: run glauth
         run: |
           curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
+          sed -i '' "s#listen = \"0.0.0.0:3893\"#listen = \"$(ipconfig getifaddr en0):3893\"#" sample.cfg
           ./glauth -c sample.cfg &
           sleep 5
 
       - name: test-search-mode
-        run: make test-search-mode
+        run: |
+          sed -i '' "s/host: localhost/host: $(ipconfig getifaddr en0 | awk '{print $NF}')/" example/envoy-search.yaml
+          make test-search-mode

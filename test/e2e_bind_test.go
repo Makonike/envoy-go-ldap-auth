@@ -24,7 +24,7 @@ func TestE2EBind(t *testing.T) {
 		t.Fatalf("unexpected status code: %v", resp2.StatusCode)
 	}
 
-	req.SetBasicAuth("unknown", "dogood")
+	req.SetBasicAuth("hackers", "unknown")
 	resp3, err := http.DefaultClient.Do(req)
 	defer resp3.Body.Close()
 	if resp3.StatusCode != http.StatusUnauthorized {
