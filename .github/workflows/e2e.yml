@@ -2,9 +2,9 @@ name: build ci
 
 on:
   push:
-    branches: [ "test-ci" ]
+    branches: [ "test-ci2" ]
   pull_request:
-    branches: [ "test-ci" ]
+    branches: [ "test-ci2" ]
 
 jobs:
   test-bind:
