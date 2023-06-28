@@ -2,7 +2,7 @@ name: e2e
 on: [pull_request, push]
 
 jobs:
-  e2e:
+  e2e-bind:
     runs-on: ubuntu-latest
     env:
       GODEBUG: cgocheck=0
@@ -44,7 +44,51 @@ jobs:
 
       - name: test
         run: |
-          go test test/e2e_test.go
+          go test test/e2e_bind_test.go
+
+  e2e-search:
+    runs-on: ubuntu-latest
+    env:
+      GODEBUG: cgocheck=0
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+
+      - name: prepare glauth
+        run: |
+          curl -L -o glauth https://github.com/glauth/glauth/releases/download/v2.2.0-RC1/glauth-linux-amd64
+          chmod +x glauth
+
+      - name: build
+        run: make build
+
+      - name: run glauth
+        run: |
+          curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
+          ./glauth -c sample.cfg &
+          sleep 5
+
+      - name: build
+        run: |
+          make build
+          sudo mkdir -p /etc/envoy
+          sudo cp libgolang.so /etc/envoy/libgolang.so
+
+      - name: envoy
+        run: |
+          curl -L -o envoy https://github.com/envoyproxy/envoy/releases/download/v1.26.2/envoy-contrib-x86_64
+          chmod +x envoy
+          sudo cp envoy /usr/bin/envoy
+          sudo chmod +x /usr/bin/envoy
+
+      - name: test
+        run: |
+          go test test/e2e_search_test.go
 
   e2e-tls:
     runs-on: ubuntu-latest

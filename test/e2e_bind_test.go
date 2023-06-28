@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func startEnvoyTLS(configPath string) {
+func startEnvoy(configPath string) {
 	cmd := exec.Command("envoy", "-c", configPath)
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -23,9 +23,9 @@ func startEnvoyTLS(configPath string) {
 	}
 }
 
-func TestBindTLS(t *testing.T) {
+func TestBind(t *testing.T) {
 
-	go startEnvoyTLS("../example/envoy-tls.yaml")
+	go startEnvoy("../example/envoy.yaml")
 	time.Sleep(5 * time.Second)
 
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:10000/", nil)
