@@ -38,6 +38,7 @@ jobs:
         run: | 
           curl -L -o envoy https://github.com/envoyproxy/envoy/releases/download/v1.26.2/envoy-contrib-aarch_64
           chmod +x envoy
+          export PATH=$PATH:$(pwd)
 
       - name: test
         run: |
