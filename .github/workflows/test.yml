@@ -1,0 +1,44 @@
+name: test
+on: [pull_request, push]
+
+jobs:
+  test-bind:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.19
+
+      - name: prepare glauth
+        run: |
+          curl -L -o glauth https://github.com/glauth/glauth/releases/download/v2.2.0-RC1/glauth-linux-amd64
+          chmod +x glauth
+
+      - name: build
+        run: make build
+
+      - name: run glauth
+        run: |
+          curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
+          ./glauth -c sample.cfg &
+          sleep 5
+
+      - name: build
+        run: |
+          make build
+          mkdir -p /etc/envoy
+          cp libgolang.so /etc/envoy/libgolang.so
+
+      - name: envoy
+        run: | 
+          curl -L -o envoy https://github.com/envoyproxy/envoy/releases/download/v1.26.2/envoy-contrib-aarch_64
+          chmod +x envoy
+
+      - name: test
+        run: |
+          go test -v -cover ./...
