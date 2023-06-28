@@ -108,6 +108,7 @@ jobs:
           curl -L -o glauth https://github.com/glauth/glauth/releases/download/v2.2.0-RC1/glauth-linux-amd64
           chmod +x glauth
           curl -L -o sample.cfg https://raw.githubusercontent.com/glauth/glauth/master/v2/sample-simple.cfg
+          sed -i "s#listen = \"0.0.0.0:3894\"#listen = \"$(ifconfig eth0 | grep 'inet ' | awk '{print $2}'):3894\"#" sample.cfg
           sed -i 's/enabled = false/enabled = true/g' sample.cfg
           
           sed -i "s/IP:127\.0\.0\.1/IP:$(hostname -I | awk '{print $1}')/g" example/tls/csr.conf
@@ -135,5 +136,6 @@ jobs:
 
       - name: test
         run: |
+          sed -i "s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/" example/envoy-tls.yaml
           awk 'FNR==NR{a=a$0"\\n";next} /rootCA: # ""/{sub(/rootCA: # ""/, "rootCA: \""a"\"")} 1' glauth.crt example/envoy-tls.yaml > example/envoy.yaml.tmp && mv example/envoy.yaml.tmp example/envoy-tls.yaml
           go test test/e2e_tls_test.go
