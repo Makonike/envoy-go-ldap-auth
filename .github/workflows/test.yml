@@ -5,7 +5,6 @@ jobs:
   test-bind:
     runs-on: ubuntu-latest
     env:
-      CGO_ENABLED: 0
       GODEBUG: cgocheck=0
     steps:
       - name: checkout
