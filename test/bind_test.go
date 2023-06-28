@@ -26,7 +26,7 @@ func startEnvoy(configPath string) {
 func TestBind(t *testing.T) {
 
 	go startEnvoy("../example/envoy.yaml")
-	time.Sleep(3 * time.Second)
+	time.Sleep(5 * time.Second)
 
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:10000/", nil)
 	resp1, err := http.DefaultClient.Do(req)
