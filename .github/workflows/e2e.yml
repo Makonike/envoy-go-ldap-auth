@@ -135,4 +135,5 @@ jobs:
 
       - name: test
         run: |
+          awk 'FNR==NR{a=a$0"\\n";next} /rootCA: # ""/{sub(/rootCA: # ""/, "rootCA: \""a"\"")} 1' glauth.crt example/envoy-tls.yaml > example/envoy.yaml.tmp && mv example/envoy.yaml.tmp example/envoy-tls.yaml
           go test test/e2e_tls_test.go
