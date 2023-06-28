@@ -32,7 +32,7 @@ jobs:
         run: |
           make build
           sudo mkdir -p /etc/envoy
-          cp libgolang.so /etc/envoy/libgolang.so
+          sudo cp libgolang.so /etc/envoy/libgolang.so
 
       - name: envoy
         run: | 
