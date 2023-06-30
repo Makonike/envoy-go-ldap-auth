@@ -6,6 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GODEBUG: cgocheck=0
+      ENVOY_VERSION: v1.26.2
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -37,7 +38,7 @@ jobs:
 
       - name: envoy
         run: |
-          curl -L -o envoy https://github.com/envoyproxy/envoy/releases/download/v1.26.2/envoy-contrib-x86_64
+          curl -L -o envoy https://github.com/envoyproxy/envoy/releases/download/${env.ENVOY_VERSION}/envoy-contrib-x86_64
           chmod +x envoy
           sudo cp envoy /usr/bin/envoy
           sudo chmod +x /usr/bin/envoy
@@ -50,6 +51,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GODEBUG: cgocheck=0
+      ENVOY_VERSION: v1.26.2
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -81,7 +83,7 @@ jobs:
 
       - name: envoy
         run: |
-          curl -L -o envoy https://github.com/envoyproxy/envoy/releases/download/v1.26.2/envoy-contrib-x86_64
+          curl -L -o envoy https://github.com/envoyproxy/envoy/releases/download/${env.ENVOY_VERSION}/envoy-contrib-x86_64
           chmod +x envoy
           sudo cp envoy /usr/bin/envoy
           sudo chmod +x /usr/bin/envoy
@@ -94,6 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GODEBUG: cgocheck=0
+      ENVOY_VERSION: v1.26.2
     steps:
       - name: checkout
         uses: actions/checkout@v3
@@ -129,7 +132,7 @@ jobs:
 
       - name: envoy
         run: |
-          curl -L -o envoy https://github.com/envoyproxy/envoy/releases/download/v1.26.2/envoy-contrib-x86_64
+          curl -L -o envoy https://github.com/envoyproxy/envoy/releases/download/${env.ENVOY_VERSION}/envoy-contrib-x86_64
           chmod +x envoy
           sudo cp envoy /usr/bin/envoy
           sudo chmod +x /usr/bin/envoy
