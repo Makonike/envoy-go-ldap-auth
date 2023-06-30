@@ -7,7 +7,7 @@ import (
 )
 
 func TestSearch(t *testing.T) {
-	go startEnvoy("../example/envoy-search.yaml")
+	go startEnvoySearch("localhost", 3894, "dc=glauth,dc=com", "cn", "cn=serviceuser,ou=svcaccts,dc=glauth,dc=com", "mysecret", "(cn=%s)")
 	time.Sleep(5 * time.Second)
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:10000/", nil)
 

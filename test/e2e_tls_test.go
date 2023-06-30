@@ -8,7 +8,7 @@ import (
 
 func TestBindTLS(t *testing.T) {
 
-	go startEnvoy("../example/envoy-tls.yaml")
+	go startEnvoyTLS("localhost", 3894, "dc=glauth,dc=com", "cn")
 	time.Sleep(5 * time.Second)
 
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:10000/", nil)
