@@ -20,7 +20,7 @@ func startEnvoyTLS(host string, port int, baseDn, attribute string) {
 
 func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, filter string, tls, startTLS, insecureSkipVerify bool, rootCA string) {
 	generateEnvoyConfig(host, port, baseDn, attribute, bindDn, bindPassword, filter, tls, startTLS, insecureSkipVerify, rootCA)
-	cmd := exec.Command("envoy", "-c", "envoy.yaml")
+	cmd := exec.Command("ls")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Start()
