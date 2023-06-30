@@ -16,11 +16,20 @@ func startEnvoySearch(host string, port int, baseDn, attribute, bindDn, bindPass
 
 func startEnvoyTLS(host string, port int, baseDn, attribute string) {
 	startEnvoy(host, port, baseDn, attribute, "", "", "", true, false, false, "")
+	//
+	err := exec.Command("sed -i \"s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/\" envoy.yaml").Run()
+	if err != nil {
+		panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
+	}
+	err = exec.Command("awk 'FNR==NR{a=a$0\"\\\\n\";next} /rootCA: # \"\"/{sub(/rootCA: # \"\"/, \"rootCA: \\\"\"a\"\\\"\")} 1' glauth.crt envoy.yaml > envoy.yaml.tmp && mv envoy.yaml.tmp envoy.yaml").Run()
+	if err != nil {
+		panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
+	}
 }
 
 func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, filter string, tls, startTLS, insecureSkipVerify bool, rootCA string) {
 	generateEnvoyConfig(host, port, baseDn, attribute, bindDn, bindPassword, filter, tls, startTLS, insecureSkipVerify, rootCA)
-	cmd := exec.Command("ls")
+	cmd := exec.Command("envoy", "-c", "envoy.yaml")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Start()

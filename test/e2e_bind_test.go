@@ -7,7 +7,7 @@ import (
 )
 
 func TestBind(t *testing.T) {
-	go startEnvoyBind("localhost", 3894, "dc=glauth,dc=com", "cn")
+	go startEnvoyBind("localhost", 3893, "dc=glauth,dc=com", "cn")
 	time.Sleep(5 * time.Second)
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:10000/", nil)
 	resp1, err := http.DefaultClient.Do(req)

@@ -142,6 +142,6 @@ jobs:
 
       - name: test
         run: |
-          sed -i "s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/" envoy.yaml
-          awk 'FNR==NR{a=a$0"\\n";next} /rootCA: # ""/{sub(/rootCA: # ""/, "rootCA: \""a"\"")} 1' glauth.crt envoy.yaml > envoy.yaml.tmp && mv envoy.yaml.tmp envoy.yaml
+#          sed -i "s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/" envoy.yaml
+#          awk 'FNR==NR{a=a$0"\\n";next} /rootCA: # ""/{sub(/rootCA: # ""/, "rootCA: \""a"\"")} 1' glauth.crt envoy.yaml > envoy.yaml.tmp && mv envoy.yaml.tmp envoy.yaml
           go test test/e2e_tls_test.go test/common.go
