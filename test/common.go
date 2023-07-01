@@ -39,7 +39,7 @@ func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, 
 		panic(fmt.Sprintf("failed to start envoy: %v", err))
 	}
 
-	cmd = exec.Command("envoy", "-c", "envoy.yaml")
+	cmd = exec.Command("envoy", "-c", "envoy.yaml", "&")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err = cmd.Start()

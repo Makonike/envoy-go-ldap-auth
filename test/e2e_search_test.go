@@ -3,12 +3,10 @@ package test
 import (
 	"net/http"
 	"testing"
-	"time"
 )
 
 func TestSearch(t *testing.T) {
-	go startEnvoySearch("localhost", 3893, "dc=glauth,dc=com", "cn", "cn=serviceuser,ou=svcaccts,dc=glauth,dc=com", "mysecret", "(cn=%s)")
-	time.Sleep(5 * time.Second)
+	startEnvoySearch("localhost", 3893, "dc=glauth,dc=com", "cn", "cn=serviceuser,ou=svcaccts,dc=glauth,dc=com", "mysecret", "(cn=%s)")
 	req, err := http.NewRequest(http.MethodGet, "http://localhost:10000/", nil)
 
 	resp1, err := http.DefaultClient.Do(req)
