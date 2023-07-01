@@ -22,19 +22,13 @@ func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, 
 	generateEnvoyConfig(host, port, baseDn, attribute, bindDn, bindPassword, filter, tls, startTLS, insecureSkipVerify, rootCA)
 	var err error
 	if tls {
-		cmd := exec.Command(`sed`, "-i", `s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print \$2}')/`, "envoy.yaml")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		err = cmd.Start()
+		err = exec.Command("bash", "-c", `sed -i "s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/" envoy.yaml`).Run()
 		if err != nil {
-			panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
+			panic(fmt.Sprintf("failed to update envoy.yaml: %v", err))
 		}
-		cmd = exec.Command("awk", `FNR==NR{a=a$0"\\n";next} /rootCA: # ""/{sub(/rootCA: # ""/, "rootCA: \""a"\"")} 1`, "glauth.crt", "envoy.yaml", ">", "envoy.yaml.tmp", "&&", "mv", "envoy.yaml.tmp", "envoy.yaml")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		err = cmd.Start()
+		err = exec.Command("sh", "-c", `awk 'FNR==NR{a=a$0"\\n";next} /rootCA: # ""/{sub(/rootCA: # ""/, "rootCA: \""a"\"")} 1' glauth.crt envoy.yaml > envoy.yaml.tmp && mv envoy.yaml.tmp envoy.yaml`).Run()
 		if err != nil {
-			panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
+			panic(fmt.Sprintf("failed to update envoy.yaml: %v", err))
 		}
 	}
 	cmd := exec.Command("cat", "envoy.yaml")
