@@ -30,7 +30,13 @@ func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, 
 		if err != nil {
 			panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
 		}
-		_ = exec.Command("cat", "envoy.yaml").Run()
+		cmd := exec.Command("cat", "envoy.yaml")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Start()
+		if err != nil {
+			panic(fmt.Sprintf("failed to start envoy: %v", err))
+		}
 	}
 	cmd := exec.Command("envoy", "-c", "envoy.yaml")
 	cmd.Stdout = os.Stdout
