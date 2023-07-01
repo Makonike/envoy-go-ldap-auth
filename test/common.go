@@ -7,19 +7,19 @@ import (
 )
 
 func startEnvoyBind(host string, port int, baseDn, attribute string) {
-	startEnvoy(host, port, baseDn, attribute, "", "", "", false, false, false, "")
+	startEnvoy(host, port, baseDn, attribute, "", "", "", false)
 }
 
 func startEnvoySearch(host string, port int, baseDn, attribute, bindDn, bindPassword, filter string) {
-	startEnvoy(host, port, baseDn, attribute, bindDn, bindPassword, filter, false, false, false, "")
+	startEnvoy(host, port, baseDn, attribute, bindDn, bindPassword, filter, false)
 }
 
 func startEnvoyTLS(host string, port int, baseDn, attribute string) {
-	startEnvoy(host, port, baseDn, attribute, "", "", "", true, false, false, "")
+	startEnvoy(host, port, baseDn, attribute, "", "", "", true)
 }
 
-func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, filter string, tls, startTLS, insecureSkipVerify bool, rootCA string) {
-	generateEnvoyConfig(host, port, baseDn, attribute, bindDn, bindPassword, filter, tls, startTLS, insecureSkipVerify, rootCA)
+func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, filter string, tls bool) {
+	generateEnvoyConfig(host, port, baseDn, attribute, bindDn, bindPassword, filter, tls)
 	var err error
 	if tls {
 		err = exec.Command("bash", "-c", `sed -i "s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/" envoy.yaml`).Run()
@@ -52,7 +52,7 @@ func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, 
 	}
 }
 
-func generateEnvoyConfig(host string, port int, baseDn, attribute, bindDn, bindPassword, filter string, tls, startTLS, insecureSkipVerify bool, rootCA string) {
+func generateEnvoyConfig(host string, port int, baseDn, attribute, bindDn, bindPassword, filter string, tls bool) {
 	config := fmt.Sprintf(`
 static_resources:
 
@@ -94,10 +94,10 @@ static_resources:
                           # if the filter is set, the filter application will run in search mode.
                           filter: %s # (&(objectClass=inetOrgPerson)(gidNumber=500)(uid=%%s))
                           timeout: 60 # unit is second.
-                          tls: true %t # false
-                          startTLS: %t # false
-                          insecureSkipVerify: %t # false
-                          rootCA: %s # ""
+                          tls: %t # false
+                          startTLS: # false
+                          insecureSkipVerify: # false
+                          rootCA: # ""
 
                   - name: envoy.filters.http.router
                     typed_config:
@@ -133,7 +133,7 @@ static_resources:
         typed_config:
           "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.UpstreamTlsContext
           sni: mosn.io
-`, host, port, baseDn, attribute, bindDn, bindPassword, filter, tls, startTLS, insecureSkipVerify, rootCA)
+`, host, port, baseDn, attribute, bindDn, bindPassword, filter, tls)
 
 	// Write the configuration to the specified file
 	err := os.WriteFile("envoy.yaml", []byte(config), 0644)
