@@ -22,7 +22,7 @@ func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, 
 	generateEnvoyConfig(host, port, baseDn, attribute, bindDn, bindPassword, filter, tls, startTLS, insecureSkipVerify, rootCA)
 	var err error
 	if tls {
-		cmd := exec.Command(`sed`, "-i", `s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/`, "envoy.yaml")
+		cmd := exec.Command(`sed`, "-i", `s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print \$2}')/`, "envoy.yaml")
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
 		err = cmd.Start()
