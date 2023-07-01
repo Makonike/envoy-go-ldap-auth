@@ -29,20 +29,20 @@ func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, 
 		if err != nil {
 			panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
 		}
-		//cmd = exec.Command(`sed -i "s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/" envoy.yaml`)
-		//cmd.Stdout = os.Stdout
-		//cmd.Stderr = os.Stderr
-		//err = cmd.Start()
-		//if err != nil {
-		//	panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
-		//}
-		//cmd = exec.Command(`awk 'FNR==NR{a=a$0"\\n";next} /rootCA: # ""/{sub(/rootCA: # ""/, "rootCA: \""a"\"")} 1' glauth.crt envoy.yaml > envoy.yaml.tmp && mv envoy.yaml.tmp envoy.yaml`)
-		//cmd.Stdout = os.Stdout
-		//cmd.Stderr = os.Stderr
-		//err = cmd.Start()
-		//if err != nil {
-		//	panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
-		//}
+		cmd = exec.Command(`sed`, "-i", `"s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/"`, "envoy.yaml")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Start()
+		if err != nil {
+			panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
+		}
+		cmd = exec.Command("awk", ` 'FNR==NR{a=a$0"\\n";next} /rootCA: # ""/{sub(/rootCA: # ""/, "rootCA: \""a"\"")} 1' glauth.crt envoy.yaml > envoy.yaml.tmp && mv envoy.yaml.tmp envoy.yaml`)
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		err = cmd.Start()
+		if err != nil {
+			panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
+		}
 		cmd = exec.Command("cat", "envoy.yaml")
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
