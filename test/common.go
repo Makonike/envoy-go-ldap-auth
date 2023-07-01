@@ -20,8 +20,8 @@ func startEnvoyTLS(host string, port int, baseDn, attribute string) {
 
 func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, filter string, tls, startTLS, insecureSkipVerify bool, rootCA string) {
 	generateEnvoyConfig(host, port, baseDn, attribute, bindDn, bindPassword, filter, tls, startTLS, insecureSkipVerify, rootCA)
+	var err error
 	if tls {
-		var err error
 		cmd := exec.Command(`sed`, "-i", `"s/host: localhost/host: $(ifconfig eth0 | awk '/inet / {print $2}')/"`, "envoy.yaml")
 		cmd.Stdout = os.Stdout
 		cmd.Stderr = os.Stderr
@@ -36,18 +36,19 @@ func startEnvoy(host string, port int, baseDn, attribute, bindDn, bindPassword, 
 		if err != nil {
 			panic(fmt.Sprintf("failed to sed envoy.yaml: %v", err))
 		}
-		cmd = exec.Command("cat", "envoy.yaml")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		err = cmd.Start()
-		if err != nil {
-			panic(fmt.Sprintf("failed to start envoy: %v", err))
-		}
 	}
-	cmd := exec.Command("envoy", "-c", "envoy.yaml")
+	cmd := exec.Command("cat", "envoy.yaml")
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
-	err := cmd.Start()
+	err = cmd.Start()
+	if err != nil {
+		panic(fmt.Sprintf("failed to start envoy: %v", err))
+	}
+
+	cmd = exec.Command("envoy", "-c", "envoy.yaml")
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+	err = cmd.Start()
 	if err != nil {
 		panic(fmt.Sprintf("failed to start envoy: %v", err))
 	}

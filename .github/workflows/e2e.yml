@@ -121,6 +121,7 @@ jobs:
           openssl genpkey -algorithm RSA -out glauth.key -pkeyopt rsa_keygen_bits:2048
           openssl req -new -key glauth.key -out glauth.csr -config example/tls/csr.conf
           openssl x509 -req -in glauth.csr -signkey glauth.key -out glauth.crt -extensions req_ext -extfile example/tls/csr.conf -days 365
+          cp glauth.crt test/glauth.crt
 
       - name: run glauth
         run: |
